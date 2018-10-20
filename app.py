@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import g #needed to use the application context 'g' namespace variable
 from flask import jsonify
+from flask import request
 from gremlin_python.driver import client
 app = Flask('simpleApp')
 
@@ -8,12 +9,34 @@ app = Flask('simpleApp')
 def hello_world():
     return 'hello world!'
 
-@app.route('/names')
+@app.route('/person', methods = ['POST', 'GET'])
 def gremlin_names():
     client = get_db()
-    names = g.client.submitAsync("g.V().values('name')")
-    result_set = names.result()
-    result = result_set.one()
+
+    if request.method == 'POST':
+        print "Hello World!"
+        json_post = jsonify(request.form)
+        form_values = jsonify(request.values)
+        data = jsonify(request.data) # has data
+        json_data = request.get_json() # has json
+        request_files = jsonify(request.files)
+        form_name = request.form.get('name')
+        arg_name = request.args.get('name')
+        print "json_post",json_post
+        print "form_values", form_values
+        print "files", request_files
+        print "data", data
+        print "json data", json_data
+        print "form name: ",form_name
+        print "arg name: ",arg_name
+        print request.values.get('name')
+        result = request.values
+
+    else:
+        names = g.client.submitAsync("g.V().values('name')")
+        result_set = names.result()
+        result = result_set.one()
+
     return jsonify(result)
 
 def get_db():
