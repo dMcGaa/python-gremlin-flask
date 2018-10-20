@@ -13,29 +13,31 @@ def hello_world():
 def gremlin_names():
     client = get_db()
 
+    vertices_rep = ".values('name')"
+
     if request.method == 'POST':
-        print "Hello World!"
-        json_post = jsonify(request.form)
-        form_values = jsonify(request.values)
+        print "Received 'person' POST"
         data = jsonify(request.data) # has data
         json_data = request.get_json() # has json
-        request_files = jsonify(request.files)
-        form_name = request.form.get('name')
-        arg_name = request.args.get('name')
-        print "json_post",json_post
-        print "form_values", form_values
-        print "files", request_files
-        print "data", data
-        print "json data", json_data
-        print "form name: ",form_name
-        print "arg name: ",arg_name
-        print request.values.get('name')
-        result = request.values
+        person_name = json_data["name"]
+        print "person name:", person_name
+        print "data:", data
+        print "json data:", json_data
+        gremlin_op = "g.addV().property('name','{}')".format(person_name)
+        gremlinCmd = ''.join([gremlin_op, vertices_rep])
+        result_set = g.client.submit(gremlinCmd)
+        future_person = result_set.all()
+        person = future_person.result()
+        print "person created: ", person
+        result = person[0]
+        #result = newPerson.result() # one vertice is resultset
 
     else:
-        names = g.client.submitAsync("g.V().values('name')")
-        result_set = names.result()
-        result = result_set.one()
+        gremlin_op = "g.V()"
+        gremlinCmd = ''.join([gremlin_op, vertices_rep])
+        result_set = g.client.submitAsync(gremlinCmd)
+        future_persons = result_set.result()
+        result = future_persons.one()
 
     return jsonify(result)
 
