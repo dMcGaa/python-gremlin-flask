@@ -13,18 +13,7 @@ def hello_world():
 def gremlin_names():
     client = get_db()
 
-    #vertices_rep = ".valueMap(true)"
-    #vertices_rep = ".values('name')" # works
-    #vertices_rep = ".valueMap('name', 'age', 'id')" # works
-    #vertices_rep = "project('name', 'age', 'id').by('name').by('age').by('id')"
-    #vertices_rep = ".properties().hasKeys('name','age','id').project('name', 'age').by('name').by('age')"
-    #vertices_rep = ".hasKey('name').values('name')"
-    #vertices_rep = ".hasKeys('age').valueMap()"
-    #vertices_rep = ".properties().hasKeys('age').values('name')"
-    #vertices_rep = ".properties().hasKeys('name').project('name').by('name')"
-    #vertices_rep = ".values('name', 'age')" # works, but not as objects
     vertices_rep = ".hasLabel('person')"
-    #vertices_rep = ""
     gmn_pj = ".project('props', 'id','label')"
     gmn_pj_props = ".by(valueMap())"
     gmn_pj_id = ".by(id)"
@@ -42,7 +31,6 @@ def gremlin_names():
         print "person name:", person_name
         print "data:", data
         print "json data:", json_data
-        #gremlin_op = "g.addV().property('name','{}', 'party', '{}')".format(person_name, person_party)
         gremlin_op = "g.addV().property('name','{}').property('age', '{}').property(label,'{}')".format(person_name, person_age, request_label)
         gremlinCmd = ''.join([gremlin_op, vertices_rep])
         result_set = g.client.submit(gremlinCmd)
@@ -50,7 +38,6 @@ def gremlin_names():
         person = future_person.result()
         print "person created: ", person
         result = person[0]
-        #result = newPerson.result() # one vertice is resultset
 
     else:
         #vertices_rep = ".has('name').valueMap('name','age', 'id')" #works but no id
