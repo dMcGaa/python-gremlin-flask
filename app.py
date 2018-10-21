@@ -13,17 +13,37 @@ def hello_world():
 def gremlin_names():
     client = get_db()
 
-    vertices_rep = ".values('name')"
+    #vertices_rep = ".valueMap(true)"
+    #vertices_rep = ".values('name')" # works
+    #vertices_rep = ".valueMap('name', 'age', 'id')" # works
+    #vertices_rep = "project('name', 'age', 'id').by('name').by('age').by('id')"
+    #vertices_rep = ".properties().hasKeys('name','age','id').project('name', 'age').by('name').by('age')"
+    #vertices_rep = ".hasKey('name').values('name')"
+    #vertices_rep = ".hasKeys('age').valueMap()"
+    #vertices_rep = ".properties().hasKeys('age').values('name')"
+    #vertices_rep = ".properties().hasKeys('name').project('name').by('name')"
+    #vertices_rep = ".values('name', 'age')" # works, but not as objects
+    vertices_rep = ".hasLabel('person')"
+    #vertices_rep = ""
+    gmn_pj = ".project('props', 'id','label')"
+    gmn_pj_props = ".by(valueMap())"
+    gmn_pj_id = ".by(id)"
+    gmn_pj_label = ".by(label)"
+    vertices_rep = ''.join([vertices_rep,gmn_pj, gmn_pj_props, gmn_pj_id, gmn_pj_label])
 
     if request.method == 'POST':
         print "Received 'person' POST"
         data = jsonify(request.data) # has data
         json_data = request.get_json() # has json
         person_name = json_data["name"]
+        person_age = json_data["age"]
+        request_label = json_data["label"]
+        #person_party = json_data["party"]
         print "person name:", person_name
         print "data:", data
         print "json data:", json_data
-        gremlin_op = "g.addV().property('name','{}')".format(person_name)
+        #gremlin_op = "g.addV().property('name','{}', 'party', '{}')".format(person_name, person_party)
+        gremlin_op = "g.addV().property('name','{}').property('age', '{}').property(label,'{}')".format(person_name, person_age, request_label)
         gremlinCmd = ''.join([gremlin_op, vertices_rep])
         result_set = g.client.submit(gremlinCmd)
         future_person = result_set.all()
@@ -33,6 +53,8 @@ def gremlin_names():
         #result = newPerson.result() # one vertice is resultset
 
     else:
+        #vertices_rep = ".has('name').valueMap('name','age', 'id')" #works but no id
+        #vertices_rep = ".has('name').valueMap(true,'name','age', 'id')"#should work but doesnt, bug fix with 3.3.2
         gremlin_op = "g.V()"
         gremlinCmd = ''.join([gremlin_op, vertices_rep])
         result_set = g.client.submitAsync(gremlinCmd)
