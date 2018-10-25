@@ -32,3 +32,18 @@ python get-pip.py --force-reinstall
 pip install futures
 ```
 
+## Issue commands with `curl`
+1. Basic flask get
+```bash
+curl localhost:5000
+```
+
+2. GET the 'person' endpoint
+```bash
+curl localhost:5000/person
+```
+
+3. POST to the 'person' endpoint
+```bash
+curl -d '{"name": "your name", "age": 95, "label": "person"}' localhost:5000/person --header "content-type:application/json"
+```
