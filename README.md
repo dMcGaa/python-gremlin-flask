@@ -47,3 +47,7 @@ curl localhost:5000/person
 ```bash
 curl -d '{"name": "your name", "age": 95, "label": "person"}' localhost:5000/person --header "content-type:application/json"
 ```
+
+## Extra Info
+- [azure-cosmos-db-graph-python-getting-started](https://azure.microsoft.com/en-us/resources/samples/azure-cosmos-db-graph-python-getting-started/
+- [reading-and-writing-files-in-python](https://www.pythonforbeginners.com/files/reading-and-writing-files-in-python)
