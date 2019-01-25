@@ -31,7 +31,7 @@ def gremlin_names():
         print "person name:", person_name
         print "data:", data
         print "json data:", json_data
-        gremlin_op = "g.addV().property('name','{}').property('age', '{}').property(label,'{}')".format(person_name, person_age, request_label)
+        gremlin_op = "g.addV().property('name','{}').property('age', {}).property(label,'{}')".format(person_name, person_age, request_label)
         gremlinCmd = ''.join([gremlin_op, vertices_rep])
         result_set = g.client.submit(gremlinCmd)
         future_person = result_set.all()

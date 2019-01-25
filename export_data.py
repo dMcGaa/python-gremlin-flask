@@ -1,4 +1,5 @@
 from gremlin_python.driver import client
+import json
 
 def get_db():
     return client.Client('ws://localhost:8182/gremlin', 'g')
@@ -22,7 +23,7 @@ def get_person():
 def write_array(arr):
     file = open("./data/datafile.txt","w")
     for i in arr:
-        file.write(str(i))
+        json.dump(i, file)
         file.write("\n")
     file.close() 
 
