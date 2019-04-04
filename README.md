@@ -12,6 +12,10 @@ bin/gremlin-server.sh conf/gremlin-server-modern.yaml
 gremlin> :remote connect tinkerpop.server conf/remote.yaml
 ==>Configured localhost/127.0.0.1:8182
 ```
+5. And issue commands
+```bash
+gremlin> :> g.V()
+```
 
 ## Running the Flask app
 1. From the directory of your flask app.py file:
